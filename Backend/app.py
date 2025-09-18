@@ -7,6 +7,7 @@ from typing import Any, Dict
 from flask import Flask, request, jsonify, g, send_from_directory
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine, Connection
+from markupsafe import escape
 
 from backend.services.allocation import allocate_order
 from backend.services.refresh_materialized import refresh_current_stock_mv
@@ -154,6 +155,27 @@ def admin_refresh_mv():
     with g.db.begin():
         refresh_current_stock_mv(g.db)
     return jsonify({"refreshed": True})
+
+@app.get("/ui/current_stock_table")
+def current_stock_table():
+    tenant_id = require_tenant()
+    product_id = request.args.get("product_id")
+    if not product_id:
+        return ("product_id required", 400)
+
+    with g.db.begin():
+        set_tenant(g.db, tenant_id)
+        rows = g.db.execute(SQL_CURRENT_STOCK, {"product_id": product_id}).all()
+
+    # Render minimal HTML table (no template engine required)
+    html = ["<table class='table'><thead><tr><th>Warehouse</th><th>Location</th><th>Lot</th><th>Qty</th></tr></thead><tbody>"]
+    for (prod, wh, loc, lot, qty) in rows:
+        html.append(
+            f"<tr><td>{escape(wh)}</td><td>{escape(loc)}</td><td>{escape(lot or '')}</td><td>{escape(qty)}</td></tr>"
+        )
+    html.append("</tbody></table>")
+    return "".join(html)
+
 
 
 if __name__ == "__main__":

@@ -35,3 +35,35 @@ alembic -c alembic.ini upgrade head
 docker compose up -d
 
 # UI: http://localhost:8000   DB UI: http://localhost:8080
+
+
+## SCD2 dimensions (dw) — “current row” pattern
+
+We model SCD2 for product/customer/warehouse with:
+- `valid_from`, `valid_to`, `is_current`
+- `valid_period` (generated `tstzrange`)
+- **No overlap** constraint per natural key:
+  ```sql
+  EXCLUDE USING gist (tenant_id WITH =, product_nk WITH =, valid_period WITH &&);
+
+  Fast current lookup:
+
+CREATE UNIQUE INDEX ux_dim_product_current
+  ON dw.dim_product (tenant_id, product_nk) WHERE is_current;
+
+  Upserts use a “close + insert if changed” flow (see db/queries/dw_upsert_dims.sql).
+If attributes are identical, we do nothing.
+
+Admin: refresh materialized views
+
+A manual endpoint exists for the demo:
+
+Enable by setting ADMIN_TOKEN in the API container or your shell.
+
+Call with header X-Admin-Token: <token>:
+
+curl -X POST -H "X-Admin-Token: $ADMIN_TOKEN" http://localhost:8000/admin/refresh_mv
+
+
+We use a full refresh for simplicity. A future toggle to
+REFRESH MATERIALIZED VIEW CONCURRENTLY is possible thanks to the unique index.

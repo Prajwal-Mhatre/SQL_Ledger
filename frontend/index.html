@@ -44,17 +44,26 @@
     <pre id="allocOut" class="panel"></pre>
   </section>
 
-  <section>
-    <h2>Current Stock (by product)</h2>
-    <form hx-get="/api/current_stock" hx-target="#stockOut" hx-trigger="submit">
-      <input type="text" name="product_id" placeholder="product_id (UUID)" required>
-      <button>Fetch</button>
-    </form>
-    <div style="margin: .5rem 0;">
-      <button hx-post="/api/refresh_current_stock" hx-target="#stockOut">Refresh MV</button>
-    </div>
-    <pre id="stockOut" class="panel"></pre>
-  </section>
+<section>
+  <h2>Current Stock (by product)</h2>
+  <form
+    hx-get="/ui/current_stock_table"
+    hx-target="#stockTable"
+    hx-trigger="submit"
+    hx-headers='js:{"X-Tenant-Id": document.getElementById("tenantId").value}'
+  >
+    <input type="text" name="product_id" placeholder="product_id (UUID)" required>
+    <button>Fetch</button>
+  </form>
+  <div style="margin:.5rem 0;">
+    <button
+      hx-post="/admin/refresh_mv"
+      hx-target="#stockTable"
+      hx-headers='js:{"X-Admin-Token": window.ADMIN_TOKEN || ""}'
+    >Refresh MV</button>
+  </div>
+  <div id="stockTable" class="panel"></div>
+</section>
 
   <script src="/app.js"></script>
 </body>

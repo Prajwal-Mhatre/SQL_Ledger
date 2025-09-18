@@ -1,3 +1,7 @@
+// Optionally hardcode ADMIN_TOKEN for local demo (comment out for safety)
+// window.ADMIN_TOKEN = ""; // set to your ADMIN_TOKEN env value if you want the UI button to work
+
+
 (function () {
   const tenantInput = document.getElementById('tenantId');
   tenantInput.value = (window.DEFAULT_TENANT_ID || '');
