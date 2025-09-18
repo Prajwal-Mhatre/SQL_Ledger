@@ -1,0 +1,11 @@
+[project]
+name = "open-stock-ledger"
+version = "0.1.0"
+description = "Open Stock Ledger — Multi-tenant Inventory & Warehouse Analytics on PostgreSQL"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+  "ignore::DeprecationWarning"
+]

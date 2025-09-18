@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Stock Ledger</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Open Stock Ledger</h1>
+    <div class="tenant">
+      <label>Tenant ID</label>
+      <input id="tenantId" value="" placeholder="UUID"/>
+    </div>
+  </header>
+
+  <section>
+    <h2>Product Search</h2>
+    <form hx-get="/api/products" hx-target="#productResults" hx-trigger="submit">
+      <input type="text" name="q" placeholder="SKU or text..." />
+      <button>Search</button>
+    </form>
+    <div id="productResults" class="panel"></div>
+  </section>
+
+  <section>
+    <h2>Create Order</h2>
+    <form id="createOrderForm" onsubmit="return createOrder(event)">
+      <input type="text" id="productId" placeholder="product_id (UUID)" required>
+      <input type="number" id="qty" placeholder="qty" min="1" required>
+      <button>Create</button>
+    </form>
+    <pre id="orderOut" class="panel"></pre>
+  </section>
+
+  <section>
+    <h2>Allocate Order</h2>
+    <form id="allocForm" onsubmit="return allocate(event)">
+      <input type="text" id="orderId" placeholder="order_id (UUID)" required>
+      <button>Allocate</button>
+    </form>
+    <pre id="allocOut" class="panel"></pre>
+  </section>
+
+  <section>
+    <h2>Current Stock (by product)</h2>
+    <form hx-get="/api/current_stock" hx-target="#stockOut" hx-trigger="submit">
+      <input type="text" name="product_id" placeholder="product_id (UUID)" required>
+      <button>Fetch</button>
+    </form>
+    <div style="margin: .5rem 0;">
+      <button hx-post="/api/refresh_current_stock" hx-target="#stockOut">Refresh MV</button>
+    </div>
+    <pre id="stockOut" class="panel"></pre>
+  </section>
+
+  <script src="/app.js"></script>
+</body>
+</html>
