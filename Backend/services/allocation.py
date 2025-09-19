@@ -1,4 +1,5 @@
 from __future__ import annotations
+import hashlib
 import os
 import random
 import time
@@ -9,6 +10,8 @@ from typing import Any, Dict, List, Mapping
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.engine import Engine, Connection
+
+from backend.services.refresh_materialized import refresh_current_stock_mv
 
 RETRY_ERRORS = {"40P01", "40001"}  # deadlock detected / serialization failure
 
@@ -53,10 +56,19 @@ def _set_timeouts(conn: Connection) -> None:
 
 
 def _advisory_lock_order(conn: Connection, tenant_id: uuid.UUID, order_id: uuid.UUID) -> None:
-    """
-    Advisory lock disabled for local demo when running under restricted roles.
-    """
-    return
+    """Acquire a per-order advisory lock scoped by tenant."""
+
+    def _lock_key(tid: uuid.UUID, oid: uuid.UUID) -> int:
+        digest = hashlib.blake2b(digest_size=8)
+        digest.update(tid.bytes)
+        digest.update(oid.bytes)
+        value = int.from_bytes(digest.digest(), byteorder="big", signed=False)
+        if value >= 2**63:
+            value -= 2**64
+        return value
+
+    lock_key = _lock_key(tenant_id, order_id)
+    conn.execute(text("SELECT pg_advisory_xact_lock(:key)"), {"key": lock_key})
 
 
 def _retry_sleep(attempt: int) -> None:
@@ -140,6 +152,7 @@ def release_order(engine: Engine, tenant_id: uuid.UUID, order_id: uuid.UUID) -> 
                 text(SQL["release_active_holds"]), {"order_id": str(order_id)}
             ).mappings().all()
             released_qty = 0
+            ledger_changed = False
             for row in released_rows:
                 qty = int(row["qty"])
                 released_qty += qty
@@ -157,8 +170,11 @@ def release_order(engine: Engine, tenant_id: uuid.UUID, order_id: uuid.UUID) -> 
                         "op_id": str(uuid.uuid4()),
                     },
                 )
+                ledger_changed = True
             if released_rows:
                 conn.execute(text(SQL["mark_order_open"]), {"order_id": str(order_id)})
+            if ledger_changed:
+                refresh_current_stock_mv(conn)
     return {
         "order_id": str(order_id),
         "released_lines": len(released_rows),
@@ -203,6 +219,7 @@ def allocate_order(engine: Engine, tenant_id: uuid.UUID, order_id: uuid.UUID, re
 
                     lines = _select_order_lines(conn, order_id)
                     results: List[dict] = []
+                    ledger_changed = False
 
                     for line in lines:
                         remaining = int(line["qty"])
@@ -227,6 +244,7 @@ def allocate_order(engine: Engine, tenant_id: uuid.UUID, order_id: uuid.UUID, re
                                         location_id=c["location_id"],
                                         qty=take,
                                     )
+                                ledger_changed = True
                             except IntegrityError as exc:
                                 sqlstate = getattr(getattr(exc, "orig", None), "sqlstate", None)
                                 if sqlstate == "23P01":  # hold overlap, try next candidate
@@ -244,6 +262,9 @@ def allocate_order(engine: Engine, tenant_id: uuid.UUID, order_id: uuid.UUID, re
 
                     if any(r["allocated"] > 0 for r in results):
                         conn.execute(text(SQL["mark_order_allocated"]), {"order_id": str(order_id)})
+
+                    if ledger_changed:
+                        refresh_current_stock_mv(conn)
 
             return {"order_id": str(order_id), "lines": results}
 

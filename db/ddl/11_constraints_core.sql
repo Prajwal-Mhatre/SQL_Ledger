@@ -8,6 +8,9 @@ ALTER TABLE core.users
 ALTER TABLE core.products
   ADD CONSTRAINT products_sku_ck CHECK (length(trim(sku)) > 0);
 
+ALTER TABLE core.products
+  ADD CONSTRAINT products_price_cents_ck CHECK (price_cents >= 0);
+
 -- Composite uniqueness per tenant (case-insensitive)
 CREATE UNIQUE INDEX IF NOT EXISTS uk_products_tenant_sku_ci
   ON core.products (tenant_id, lower(sku));
@@ -20,6 +23,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS uk_locations_wh_code_ci
 
 CREATE UNIQUE INDEX IF NOT EXISTS uk_lots_tenant_prod_lot
   ON core.lots (tenant_id, product_id, lower(lot_number));
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_customers_tenant_code_ci
+  ON core.customers (tenant_id, lower(code));
 
 -- Idempotency on ledger
 CREATE UNIQUE INDEX IF NOT EXISTS uk_ledger_tenant_op

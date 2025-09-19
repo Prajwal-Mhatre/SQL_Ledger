@@ -16,6 +16,13 @@ BEGIN
     USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
     WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
 
+  -- Customers
+  ALTER TABLE core.customers ENABLE ROW LEVEL SECURITY;
+  DROP POLICY IF EXISTS customers_rls ON core.customers;
+  CREATE POLICY customers_rls ON core.customers
+    USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+    WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
   -- Warehouses
   ALTER TABLE core.warehouses ENABLE ROW LEVEL SECURITY;
   DROP POLICY IF EXISTS warehouses_rls ON core.warehouses;

@@ -8,12 +8,14 @@ CREATE TABLE IF NOT EXISTS dim_product (
   sku          text NOT NULL,
   name         text NOT NULL,
   attrs        jsonb NOT NULL DEFAULT '{}'::jsonb,
+  price_cents  integer NOT NULL DEFAULT 0,
   valid_from   timestamptz NOT NULL DEFAULT now(),
   valid_to     timestamptz,
   is_current   boolean NOT NULL DEFAULT true,
   valid_period tstzrange GENERATED ALWAYS AS (tstzrange(valid_from, valid_to, '[]')) STORED
 );
 COMMENT ON TABLE dim_product IS 'SCD2 product dimension with non-overlapping validity per (tenant, product_nk).';
+COMMENT ON COLUMN dim_product.price_cents IS 'Price snapshot (in cents) for SCD2 history.';
 
 -- No overlap for the same natural key
 ALTER TABLE dim_product

@@ -21,6 +21,20 @@ CREATE TABLE IF NOT EXISTS users (
 );
 COMMENT ON TABLE users IS 'Tenant-scoped app users.';
 
+-- Customers
+CREATE TABLE IF NOT EXISTS customers (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id  uuid NOT NULL REFERENCES core.tenants(id) ON DELETE RESTRICT,
+  code       text NOT NULL,
+  name       text NOT NULL,
+  email      text,
+  is_active  boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+COMMENT ON TABLE customers IS 'End customers tied to a tenant; drives order ownership and SCD2 dimension.';
+COMMENT ON COLUMN customers.code IS 'Tenant-scoped natural key (e.g. customer number).';
+COMMENT ON COLUMN customers.email IS 'Optional contact email for the customer.';
+
 -- Warehouses
 CREATE TABLE IF NOT EXISTS warehouses (
   id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -53,6 +67,7 @@ CREATE TABLE IF NOT EXISTS products (
   name         text NOT NULL,
   description  text,
   attributes   jsonb NOT NULL DEFAULT '{}'::jsonb,
+  price_cents  integer NOT NULL DEFAULT 0,
   is_active    boolean NOT NULL DEFAULT true,
   created_at   timestamptz NOT NULL DEFAULT now(),
   -- Generated tsvector (Postgres 12+ supports jsonb_to_tsvector)
@@ -63,6 +78,7 @@ CREATE TABLE IF NOT EXISTS products (
   ) STORED
 );
 COMMENT ON TABLE products IS 'Products with JSONB attributes. FTS via generated tsvector.';
+COMMENT ON COLUMN products.price_cents IS 'Current sell price in tenant currency, stored as cents.';
 
 -- Lots (batch/expiry)
 CREATE TABLE IF NOT EXISTS lots (
@@ -80,11 +96,13 @@ COMMENT ON TABLE lots IS 'Batch/lot instances for a product (supports FIFO by ex
 CREATE TABLE IF NOT EXISTS orders (
   id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id    uuid NOT NULL REFERENCES core.tenants(id) ON DELETE RESTRICT,
+  customer_id  uuid REFERENCES core.customers(id) ON DELETE SET NULL,
   external_ref text,
   status       text NOT NULL DEFAULT 'open' CHECK (status IN ('open','allocated','shipped','cancelled')),
   created_at   timestamptz NOT NULL DEFAULT now()
 );
 COMMENT ON TABLE orders IS 'Customer orders (minimal for demo).';
+COMMENT ON COLUMN orders.customer_id IS 'Links orders to core.customers for analytics and SCD2.';
 
 -- Order lines
 CREATE TABLE IF NOT EXISTS order_lines (

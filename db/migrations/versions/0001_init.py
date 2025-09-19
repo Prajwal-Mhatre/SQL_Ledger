@@ -28,6 +28,7 @@ def upgrade() -> None:
     _run_sql("20_tables_dw.sql")
     _run_sql("21_dw_scd2.sql")  
     _run_sql("30_mv_current_stock.sql")
+    _run_sql("35_mv_analytics.sql")
 
     _run_sql("40_partitions_stock_ledger.sql")
 

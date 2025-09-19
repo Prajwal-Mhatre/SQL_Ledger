@@ -1,6 +1,6 @@
 -- name: upsert_dim_product
 WITH cur AS (
-  SELECT product_sk, sku, name, attrs
+  SELECT product_sk, sku, name, attrs, price_cents
   FROM dw.dim_product
   WHERE tenant_id = :tenant_id AND product_nk = :product_nk AND is_current
   FOR UPDATE
@@ -8,18 +8,19 @@ WITH cur AS (
   SELECT
     (SELECT sku FROM cur)  IS DISTINCT FROM :sku   AS sku_changed,
     (SELECT name FROM cur) IS DISTINCT FROM :name  AS name_changed,
-    (SELECT attrs FROM cur) IS DISTINCT FROM :attrs AS attrs_changed
+    (SELECT attrs FROM cur) IS DISTINCT FROM :attrs AS attrs_changed,
+    (SELECT price_cents FROM cur) IS DISTINCT FROM :price_cents AS price_changed
 ), do_close AS (
   UPDATE dw.dim_product
      SET is_current = false, valid_to = now()
-   WHERE (SELECT coalesce(sku_changed, true) OR coalesce(name_changed, true) OR coalesce(attrs_changed, true) FROM change)
+   WHERE (SELECT coalesce(sku_changed, true) OR coalesce(name_changed, true) OR coalesce(attrs_changed, true) OR coalesce(price_changed, true) FROM change)
      AND tenant_id = :tenant_id AND product_nk = :product_nk AND is_current
   RETURNING 1
 )
-INSERT INTO dw.dim_product (tenant_id, product_nk, sku, name, attrs, valid_from, valid_to, is_current)
-SELECT :tenant_id, :product_nk, :sku, :name, :attrs, now(), NULL, true
+INSERT INTO dw.dim_product (tenant_id, product_nk, sku, name, attrs, price_cents, valid_from, valid_to, is_current)
+SELECT :tenant_id, :product_nk, :sku, :name, :attrs, :price_cents, now(), NULL, true
 WHERE NOT EXISTS (SELECT 1 FROM cur)
-   OR (SELECT coalesce(sku_changed, true) OR coalesce(name_changed, true) OR coalesce(attrs_changed, true) FROM change)
+   OR (SELECT coalesce(sku_changed, true) OR coalesce(name_changed, true) OR coalesce(attrs_changed, true) OR coalesce(price_changed, true) FROM change)
 RETURNING product_sk;
 
 -- name: upsert_dim_customer

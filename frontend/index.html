@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -13,12 +13,29 @@
     <div class="tenant">
       <label for="tenantId">Tenant ID</label>
       <div class="tenant-input">
-        <input id="tenantId" value="" placeholder="UUID"/>
+        <input id="tenantId" value="" placeholder="UUID" />
         <button type="button" id="tenantApply">Set</button>
       </div>
       <small id="tenantStatus" class="tenant-status"></small>
     </div>
+    <div class="tenant">
+      <label for="apiToken">API Token</label>
+      <div class="tenant-input">
+        <input id="apiToken" type="password" placeholder="token (if required)" />
+        <button type="button" id="apiApply">Save</button>
+      </div>
+      <small id="apiStatus" class="tenant-status"></small>
+    </div>
   </header>
+
+  <section>
+    <h2>Sign Up Tenant</h2>
+    <form id="tenantForm" onsubmit="return createTenant(event)">
+      <input type="text" id="tenantName" placeholder="Tenant name" required />
+      <button>Sign Up</button>
+    </form>
+    <pre id="tenantOut" class="panel"></pre>
+  </section>
 
   <section>
     <h2>Product Search</h2>
@@ -30,47 +47,95 @@
   </section>
 
   <section>
+    <h2>Create Product</h2>
+    <form id="productForm" onsubmit="return createProduct(event)">
+      <input type="text" id="prodSku" placeholder="SKU" required />
+      <input type="text" id="prodName" placeholder="Name" required />
+      <input type="number" id="prodPrice" placeholder="Price (e.g. 19.99)" step="0.01" min="0" required />
+      <input type="text" id="prodDescription" placeholder="Description" />
+      <textarea id="prodAttrs" placeholder='Attributes JSON (e.g. {"color":"red"})'></textarea>
+      <button>Create Product</button>
+    </form>
+    <pre id="productOut" class="panel"></pre>
+  </section>
+
+  <section>
+    <h2>Create Customer</h2>
+    <form id="customerForm" onsubmit="return createCustomer(event)">
+      <input type="text" id="custCode" placeholder="Customer code" required />
+      <input type="text" id="custName" placeholder="Name" required />
+      <input type="email" id="custEmail" placeholder="Email (optional)" />
+      <button>Create Customer</button>
+    </form>
+    <pre id="customerOut" class="panel"></pre>
+  </section>
+
+  <section>
     <h2>Create Order</h2>
     <form id="createOrderForm" onsubmit="return createOrder(event)">
-      <input type="text" id="productId" placeholder="product_id (UUID)" required>
-      <input type="number" id="qty" placeholder="qty" min="1" required>
-      <button>Create</button>
+      <input type="text" id="orderCustomerId" placeholder="customer_id (UUID)" required />
+      <input type="text" id="orderProductId" placeholder="product_id (UUID)" required />
+      <input type="number" id="orderQty" placeholder="qty" min="1" required />
+      <input type="text" id="orderExternal" placeholder="external_ref (optional)" />
+      <button>Create Order</button>
     </form>
     <pre id="orderOut" class="panel"></pre>
   </section>
 
   <section>
-    <h2>Allocate Order</h2>
+    <h2>Allocation & Holds</h2>
     <form id="allocForm" onsubmit="return allocate(event)">
-      <input type="text" id="orderId" placeholder="order_id (UUID)" required>
+      <input type="text" id="orderId" placeholder="order_id (UUID)" required />
       <button>Allocate</button>
       <button type="button" onclick="return releaseOrder(event)">Release Holds</button>
     </form>
     <pre id="allocOut" class="panel"></pre>
   </section>
 
-<section>
-  <h2>Current Stock (by product)</h2>
-  <form
-    hx-get="/ui/current_stock_table"
-    hx-target="#stockTable"
-    hx-trigger="submit"
-    hx-headers='js:{"X-Tenant-Id": document.getElementById("tenantId").value}'
-  >
-    <input type="text" name="product_id" placeholder="product_id (UUID)" required>
-    <button>Fetch</button>
-  </form>
-  <div style="margin:.5rem 0;">
-    <button
-      hx-post="/admin/refresh_mv"
+  <section>
+    <h2>Post Stock Event</h2>
+    <form id="stockForm" onsubmit="return createStockEvent(event)">
+      <select id="stockEventType" required>
+        <option value="">-- event type --</option>
+        <option value="RECEIPT">RECEIPT (+)</option>
+        <option value="SHIP">SHIP (-)</option>
+        <option value="ADJUST_IN">ADJUST_IN (+)</option>
+        <option value="ADJUST_OUT">ADJUST_OUT (-)</option>
+      </select>
+      <input type="text" id="stockProductId" placeholder="product_id (UUID)" required />
+      <input type="text" id="stockWarehouseId" placeholder="warehouse_id (UUID)" required />
+      <input type="text" id="stockLocationId" placeholder="location_id (UUID)" />
+      <input type="text" id="stockLotId" placeholder="lot_id (UUID)" />
+      <input type="number" id="stockQty" placeholder="qty" min="1" required />
+      <input type="text" id="stockReason" placeholder="reason (optional)" />
+      <button>Post Event</button>
+    </form>
+    <pre id="stockOut" class="panel"></pre>
+  </section>
+
+  <section>
+    <h2>Current Stock (by product)</h2>
+    <form
+      hx-get="/ui/current_stock_table"
       hx-target="#stockTable"
-      hx-headers='js:{"X-Admin-Token": window.ADMIN_TOKEN || ""}'
-    >Refresh MV</button>
-  </div>
-  <div id="stockTable" class="panel"></div>
-</section>
+      hx-trigger="submit"
+      hx-headers='js:{"X-Tenant-Id": document.getElementById("tenantId").value}'
+    >
+      <input type="text" name="product_id" placeholder="product_id (UUID)" required />
+      <button>Fetch</button>
+    </form>
+    <div class="actions">
+      <button type="button" onclick="return refreshCurrentStock(event)">Refresh MV (tenant)</button>
+      <button
+        type="button"
+        hx-post="/admin/refresh_mv"
+        hx-target="#stockTable"
+        hx-headers='js:{"X-Admin-Token": window.ADMIN_TOKEN || ""}'
+      >Admin Refresh MV</button>
+    </div>
+    <div id="stockTable" class="panel"></div>
+  </section>
 
   <script src="/app.js"></script>
 </body>
 </html>
-
