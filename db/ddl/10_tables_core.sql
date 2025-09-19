@@ -116,7 +116,7 @@ COMMENT ON TABLE holds IS 'Reservations against stock. Exclusion constraint prev
 
 -- Stock ledger (partitioned monthly on ts)
 CREATE TABLE IF NOT EXISTS stock_ledger (
-  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  id            uuid NOT NULL DEFAULT gen_random_uuid(),
   tenant_id     uuid NOT NULL REFERENCES core.tenants(id) ON DELETE RESTRICT,
   ts            timestamptz NOT NULL DEFAULT now(),
   event_type    text NOT NULL CHECK (event_type IN ('RECEIPT','SHIP','RESERVE','RELEASE','ADJUST_IN','ADJUST_OUT')),
@@ -128,6 +128,7 @@ CREATE TABLE IF NOT EXISTS stock_ledger (
   order_line_id uuid REFERENCES core.order_lines(id) ON DELETE SET NULL,
   qty_delta     integer NOT NULL,
   reason        text,
-  op_id         uuid NOT NULL
+  op_id         uuid NOT NULL,
+  CONSTRAINT pk_stock_ledger PRIMARY KEY (id, ts)
 ) PARTITION BY RANGE (ts);
 COMMENT ON TABLE stock_ledger IS 'Immutable event log. Idempotency via (tenant_id, op_id) unique.';

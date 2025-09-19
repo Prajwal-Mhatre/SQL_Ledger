@@ -1,0 +1,53 @@
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://10.211.55.3:8000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 138-781-862
+127.0.0.1 - - [19/Sep/2025 00:57:17] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:57:17] "GET /styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:57:17] "GET /app.js HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:57:48] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:57:48] "GET /styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:57:48] "GET /app.js HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:57:50] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:57:51] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:57:55] "GET /api/products?q=sku HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:03] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:15] "POST /api/orders HTTP/1.1" 201 -
+127.0.0.1 - - [19/Sep/2025 00:58:20] "POST /api/orders/4b81ba37-553a-4767-bba2-1ebfb6793f8a/allocate HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:28] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:28] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:29] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:29] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:29] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:29] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:30] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:30] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:30] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:30] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:30] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:31] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:31] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:31] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:31] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:32] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:32] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:32] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:32] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:33] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:34] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:34] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:34] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:36] "POST /api/orders/4b81ba37-553a-4767-bba2-1ebfb6793f8a/release HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:37] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:39] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:40] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:41] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:58:41] "GET /styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:58:41] "GET /app.js HTTP/1.1" 304 -
+127.0.0.1 - - [19/Sep/2025 00:58:45] "POST /admin/refresh_mv HTTP/1.1" 404 -
+127.0.0.1 - - [19/Sep/2025 00:58:51] "GET /api/products?q=sku HTTP/1.1" 200 -
+127.0.0.1 - - [19/Sep/2025 00:58:58] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -

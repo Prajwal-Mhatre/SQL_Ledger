@@ -1,9 +1,13 @@
-body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 1.2rem; }
-header { display: flex; align-items: center; gap: 2rem; }
+﻿body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 1.2rem; }
+header { display: flex; align-items: flex-start; gap: 2rem; flex-wrap: wrap; }
 h1 { margin: 0 0 .5rem 0; font-size: 1.4rem; }
 h2 { margin-top: 1.4rem; font-size: 1.1rem; }
-.tenant input { width: 420px; }
+.tenant { display: flex; flex-direction: column; gap: .35rem; }
+.tenant-input { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+.tenant input { flex: 1 1 260px; min-width: 240px; max-width: 420px; }
 input, button { padding: .4rem .6rem; font-size: 1rem; }
 form { display: flex; gap: .6rem; align-items: center; margin: .4rem 0; flex-wrap: wrap; }
 .panel { padding: .6rem; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; min-height: 48px; white-space: pre-wrap; }
 pre.panel { white-space: pre; overflow: auto; max-height: 280px; }
+.tenant-status { font-size: .85rem; color: #555; min-height: 1rem; }
+.tenant-status.tenant-status--error { color: #c0392b; }

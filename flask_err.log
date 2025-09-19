@@ -1,0 +1,493 @@
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://10.211.55.3:8000
+Press CTRL+C to quit
+127.0.0.1 - - [18/Sep/2025 23:01:49] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [18/Sep/2025 23:01:49] "GET /styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [18/Sep/2025 23:01:49] "GET /app.js HTTP/1.1" 304 -
+[2025-09-18 23:02:56,227] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': 'a3d10c10-f0a4-4127-8970-b44171066270', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:56] "POST /api/orders HTTP/1.1" 500 -
+[2025-09-18 23:02:57,163] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': '29af5b64-d840-4089-affc-0dbb050818fb', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:57] "POST /api/orders HTTP/1.1" 500 -
+[2025-09-18 23:02:58,372] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': 'e18458e8-9f4c-4481-953e-8962e7e7bfe9', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:58] "POST /api/orders HTTP/1.1" 500 -
+[2025-09-18 23:02:58,626] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': 'ecdf55bf-5122-4c65-a51b-467b522d3b8c', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:58] "POST /api/orders HTTP/1.1" 500 -
+[2025-09-18 23:02:58,847] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': '9702324a-b087-4407-8979-b9c81fb6f3ba', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:58] "POST /api/orders HTTP/1.1" 500 -
+[2025-09-18 23:02:59,063] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': 'b8e17dfd-0df8-4615-abe3-b0d12032c5a1', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:59] "POST /api/orders HTTP/1.1" 500 -
+[2025-09-18 23:02:59,276] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': '7fcfd8ce-400d-46aa-a0f6-cddeafa82287', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:59] "POST /api/orders HTTP/1.1" 500 -
+[2025-09-18 23:02:59,477] ERROR in app: Exception on /api/orders [POST]
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.InvalidTextRepresentation: invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\backend\app.py", line 122, in create_order
+    conn.execute(text("""
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\prajwalmhatre\Desktop\SQL_Project\New folder\.venv\Lib\site-packages\psycopg\cursor.py", line 97, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.DataError: (psycopg.errors.InvalidTextRepresentation) invalid input syntax for type uuid: "123455666"
+CONTEXT:  unnamed portal parameter $2 = '...'
+[SQL: 
+                INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
+                VALUES (current_setting('app.tenant_id')::uuid, %(order_id)s, %(product_id)s, %(qty)s)
+            ]
+[parameters: {'order_id': '347b2ea6-e66c-4320-94bc-8d010c655e8f', 'product_id': '123455666', 'qty': 10}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+127.0.0.1 - - [18/Sep/2025 23:02:59] "POST /api/orders HTTP/1.1" 500 -
+127.0.0.1 - - [18/Sep/2025 23:03:04] "POST /api/orders HTTP/1.1" 201 -
+127.0.0.1 - - [18/Sep/2025 23:03:23] "POST /api/orders/5affe2d5-92e0-4eb3-b2ab-ec37a1d3c17f/allocate HTTP/1.1" 500 -
+127.0.0.1 - - [18/Sep/2025 23:03:30] "POST /api/orders/{%20%20%20"order_id":%20"5affe2d5-92e0-4eb3-b2ab-ec37a1d3c17f"%20}/allocate HTTP/1.1" 500 -
+127.0.0.1 - - [18/Sep/2025 23:03:43] "POST /api/orders/5affe2d5-92e0-4eb3-b2ab-ec37a1d3c17f/allocate HTTP/1.1" 500 -
+127.0.0.1 - - [18/Sep/2025 23:03:53] "POST /api/orders/5affe2d5-92e0-4eb3-b2ab-ec37a1d3c17f/allocate HTTP/1.1" 500 -
+127.0.0.1 - - [18/Sep/2025 23:04:03] "GET /ui/current_stock_table?product_id=5affe2d5-92e0-4eb3-b2ab-ec37a1d3c17f HTTP/1.1" 200 -
+127.0.0.1 - - [18/Sep/2025 23:04:10] "GET /ui/current_stock_table?product_id=33333333-3333-3333-3333-333333333333 HTTP/1.1" 200 -
+127.0.0.1 - - [18/Sep/2025 23:04:40] "POST /api/orders/5affe2d5-92e0-4eb3-b2ab-ec37a1d3c17f/allocate HTTP/1.1" 500 -
+127.0.0.1 - - [18/Sep/2025 23:05:31] "GET / HTTP/1.1" 304 -
+127.0.0.1 - - [18/Sep/2025 23:05:32] "GET /styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [18/Sep/2025 23:05:32] "GET /app.js HTTP/1.1" 304 -
+127.0.0.1 - - [18/Sep/2025 23:05:37] "POST /api/orders HTTP/1.1" 201 -
+127.0.0.1 - - [18/Sep/2025 23:05:42] "POST /api/orders/9050dc26-1da4-4ac6-930f-1c5b80bf3ea7/allocate HTTP/1.1" 500 -

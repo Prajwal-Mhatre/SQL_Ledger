@@ -11,7 +11,7 @@ Deterministic candidate selection with row locking:
 1) Lock lots for this product in a stable order (expiry->lot_id).
 2) Compute on-hand (ledger sum) and subtract active holds.
 3) Return rows with available_qty > 0 in a deterministic lock order:
-   (warehouse_id → lot_id → location_id → expiry_date)
+   (warehouse_id â†’ lot_id â†’ location_id â†’ expiry_date)
 This ensures every worker acquires row locks in the same sequence,
 minimizing deadlocks.
 */
@@ -58,6 +58,32 @@ WHERE GREATEST(0, s.onhand - COALESCE(h.reserved,0)) > 0
 ORDER BY s.warehouse_id, cl.lot_id, s.location_id, cl.expiry_date NULLS LAST
 LIMIT :take_limit;
 
+-- name: release_active_holds
+WITH updated AS (
+  UPDATE core.holds
+     SET released_at = now()
+   WHERE tenant_id = current_setting('app.tenant_id', true)::uuid
+     AND order_id = :order_id
+     AND released_at IS NULL
+  RETURNING warehouse_id, location_id, product_id, lot_id, qty, order_line_id
+)
+SELECT * FROM updated;
+
+-- name: insert_ledger_release
+INSERT INTO core.stock_ledger
+  (tenant_id, ts, event_type, warehouse_id, location_id, product_id, lot_id,
+   order_id, order_line_id, qty_delta, reason, op_id)
+VALUES
+  (current_setting('app.tenant_id')::uuid, now(), 'RELEASE',
+   :wh, :loc, :prod, :lot, :ord, :ol, :delta, :reason, :op_id);
+
+-- name: mark_order_open
+UPDATE core.orders
+   SET status = 'open'
+ WHERE id = :order_id
+   AND tenant_id = current_setting('app.tenant_id')::uuid
+   AND status <> 'open';
+
 -- name: insert_hold
 INSERT INTO core.holds
   (id, tenant_id, order_id, order_line_id, product_id, lot_id, warehouse_id, location_id, qty)
@@ -79,3 +105,5 @@ UPDATE core.orders
  WHERE id = :order_id
    AND tenant_id = current_setting('app.tenant_id')::uuid
    AND status = 'open';
+
+

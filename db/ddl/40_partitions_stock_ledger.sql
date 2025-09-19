@@ -30,7 +30,7 @@ DECLARE
   i int;
 BEGIN
   FOR i IN 0..2 LOOP
-    PERFORM core.ensure_stock_ledger_partition(m + (i||' months')::interval);
+    PERFORM core.ensure_stock_ledger_partition((m + (i||' months')::interval)::date);
   END LOOP;
 END$$;
 

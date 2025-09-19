@@ -1,15 +1,16 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 import os
 import uuid
 from pathlib import Path
 from typing import Any, Dict
+from contextlib import contextmanager
 
 from flask import Flask, request, jsonify, g, send_from_directory
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine, Connection
 from markupsafe import escape
 
-from backend.services.allocation import allocate_order
+from backend.services.allocation import allocate_order, release_order
 from backend.services.refresh_materialized import refresh_current_stock_mv
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg://osl_app:osl_app@localhost:5432/osl")
@@ -38,6 +39,7 @@ def require_tenant() -> uuid.UUID:
 def open_db_conn():
     g.db = engine.connect()  # type: Connection
     g.db.execute(text("SET application_name = 'open-stock-ledger'"))
+    g.db.commit()
 
 @app.after_request
 def close_db_conn(response):
@@ -47,7 +49,24 @@ def close_db_conn(response):
     return response
 
 def set_tenant(conn: Connection, tenant_id: uuid.UUID):
-    conn.execute(text("SET app.tenant_id = :tid"), {"tid": str(tenant_id)})
+    conn.execute(text("SELECT set_config('app.tenant_id', :tid, false)"), {"tid": str(tenant_id)})
+
+@contextmanager
+def tenant_transaction(tenant_id: uuid.UUID):
+    conn: Connection = g.db
+    if conn.in_transaction():
+        conn.rollback()
+    with conn.begin():
+        set_tenant(conn, tenant_id)
+        yield conn
+
+@contextmanager
+def simple_transaction():
+    conn: Connection = g.db
+    if conn.in_transaction():
+        conn.rollback()
+    with conn.begin():
+        yield conn
 
 @app.get("/health")
 def health():
@@ -76,9 +95,8 @@ def product_search():
     limit = int(request.args.get("limit", "20"))
     offset = int(request.args.get("offset", "0"))
 
-    with g.db.begin():
-        set_tenant(g.db, tenant_id)
-        rows = g.db.execute(SQL_PRODUCT_SEARCH, {"q": q, "like": like, "limit": limit, "offset": offset}).mappings().all()
+    with tenant_transaction(tenant_id) as conn:
+        rows = [dict(row) for row in conn.execute(SQL_PRODUCT_SEARCH, {"q": q, "like": like, "limit": limit, "offset": offset}).mappings()]
     return jsonify({"items": list(rows)})
 
 @app.post("/api/orders")
@@ -90,10 +108,9 @@ def create_order():
     if not lines:
         return jsonify({"error": "lines required"}), 400
 
-    with g.db.begin():
-        set_tenant(g.db, tenant_id)
+    with tenant_transaction(tenant_id) as conn:
         order_id = uuid.uuid4()
-        g.db.execute(text("""
+        conn.execute(text("""
             INSERT INTO core.orders (id, tenant_id, external_ref, status) 
             VALUES (:id, current_setting('app.tenant_id')::uuid, :ref, 'open')
         """), {"id": str(order_id), "ref": external_ref})
@@ -102,7 +119,7 @@ def create_order():
             qty = int(line["qty"])
             if qty <= 0:
                 return jsonify({"error": "qty must be > 0"}), 400
-            g.db.execute(text("""
+            conn.execute(text("""
                 INSERT INTO core.order_lines (tenant_id, order_id, product_id, qty)
                 VALUES (current_setting('app.tenant_id')::uuid, :order_id, :product_id, :qty)
             """), {"order_id": str(order_id), "product_id": product_id, "qty": qty})
@@ -118,24 +135,32 @@ def allocate(order_id: str):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+@app.post("/api/orders/<order_id>/release")
+def release(order_id: str):
+    tenant_id = require_tenant()
+    try:
+        res = release_order(engine, tenant_id=uuid.UUID(str(tenant_id)), order_id=uuid.UUID(order_id))
+        return jsonify(res)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.get("/api/current_stock")
 def current_stock():
     tenant_id = require_tenant()
     product_id = request.args.get("product_id")
     if not product_id:
         return jsonify({"error": "product_id required"}), 400
-    with g.db.begin():
-        set_tenant(g.db, tenant_id)
-        rows = g.db.execute(SQL_CURRENT_STOCK, {"product_id": product_id}).mappings().all()
+    with tenant_transaction(tenant_id) as conn:
+        rows = [dict(row) for row in conn.execute(SQL_CURRENT_STOCK, {"product_id": product_id}).mappings()]
     return jsonify({"items": list(rows)})
 
 @app.post("/api/refresh_current_stock")
 def refresh_mv():
     tenant_id = require_tenant()
-    # tenant_id not strictly needed for MV refresh; RLS doesn’t apply to MV creation
-    with g.db.begin():
-        set_tenant(g.db, tenant_id)
-        refresh_current_stock_mv(g.db)
+    # tenant_id not strictly needed for MV refresh; RLS doesnâ€™t apply to MV creation
+    with tenant_transaction(tenant_id) as conn:
+        refresh_current_stock_mv(conn)
     return jsonify({"refreshed": True})
 
 
@@ -152,7 +177,7 @@ def admin_refresh_mv():
         return ("Unauthorized", 401)
 
     # No tenant required; MV holds aggregated rows for all tenants.
-    with g.db.begin():
+    with simple_transaction():
         refresh_current_stock_mv(g.db)
     return jsonify({"refreshed": True})
 
@@ -163,9 +188,8 @@ def current_stock_table():
     if not product_id:
         return ("product_id required", 400)
 
-    with g.db.begin():
-        set_tenant(g.db, tenant_id)
-        rows = g.db.execute(SQL_CURRENT_STOCK, {"product_id": product_id}).all()
+    with tenant_transaction(tenant_id) as conn:
+        rows = conn.execute(SQL_CURRENT_STOCK, {"product_id": product_id}).all()
 
     # Render minimal HTML table (no template engine required)
     html = ["<table class='table'><thead><tr><th>Warehouse</th><th>Location</th><th>Lot</th><th>Qty</th></tr></thead><tbody>"]
@@ -180,3 +204,6 @@ def current_stock_table():
 
 if __name__ == "__main__":
     app.run("0.0.0.0", 8000, debug=True)
+
+
+

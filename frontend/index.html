@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -11,8 +11,12 @@
   <header>
     <h1>Open Stock Ledger</h1>
     <div class="tenant">
-      <label>Tenant ID</label>
-      <input id="tenantId" value="" placeholder="UUID"/>
+      <label for="tenantId">Tenant ID</label>
+      <div class="tenant-input">
+        <input id="tenantId" value="" placeholder="UUID"/>
+        <button type="button" id="tenantApply">Set</button>
+      </div>
+      <small id="tenantStatus" class="tenant-status"></small>
     </div>
   </header>
 
@@ -40,6 +44,7 @@
     <form id="allocForm" onsubmit="return allocate(event)">
       <input type="text" id="orderId" placeholder="order_id (UUID)" required>
       <button>Allocate</button>
+      <button type="button" onclick="return releaseOrder(event)">Release Holds</button>
     </form>
     <pre id="allocOut" class="panel"></pre>
   </section>
@@ -68,3 +73,4 @@
   <script src="/app.js"></script>
 </body>
 </html>
+

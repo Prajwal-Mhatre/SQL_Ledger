@@ -23,7 +23,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS uk_lots_tenant_prod_lot
 
 -- Idempotency on ledger
 CREATE UNIQUE INDEX IF NOT EXISTS uk_ledger_tenant_op
-  ON core.stock_ledger (tenant_id, op_id);
+  ON core.stock_ledger (tenant_id, op_id, ts);
 
 -- Prevent overlapping holds for same (tenant, product, lot, location)
 ALTER TABLE core.holds
